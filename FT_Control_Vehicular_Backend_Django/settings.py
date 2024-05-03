@@ -25,8 +25,13 @@ SECRET_KEY = 'django-insecure-&a+b@@i)z_c3++z&2&0zqumlm&f2&6jb0_mmr22b08x_pygk4w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2','192.168.2.123']
 
+# Define el formato de fecha por defecto (DD/MM/YY)
+DATE_INPUT_FORMATS = ['%d/%m/%y']
+
+# Define el formato de hora por defecto (HH:MM)
+TIME_INPUT_FORMATS = ['%H:%M']
 
 # Application definition
 
@@ -133,9 +138,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-hn'  # Idioma español para Honduras
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Tegucigalpa'
 
 USE_I18N = True
 
