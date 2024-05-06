@@ -44,6 +44,7 @@ class ControlVehicularViewSet(viewsets.ModelViewSet):
         codigoAyudante2 = request.data.get("ayudante2", None)
         codigoConductor = request.data.get("codigoConductor", None)
         supervisorSalida = request.data.get("supervisorSalida", None)
+        taller = request.data.get("taller", None)
         placa = request.data.get("placaVehiculo", None)
         print(placa,codigoConductor)
        
@@ -60,7 +61,6 @@ class ControlVehicularViewSet(viewsets.ModelViewSet):
         
         if codigoConductor is not None:
             try:
-                data=codigoConductor
                 conductor = Empleado.objects.get(numero_empleado=int(codigoConductor))
                 print(conductor)
             except Exception as e:
@@ -86,11 +86,26 @@ class ControlVehicularViewSet(viewsets.ModelViewSet):
         
         control_vehicular = ControlVehicular.objects.create(
             vehiculo=vehiculo,
-            supervisor_salida=supervisorSalida
         )
 
+        if taller is not None:
+             control_vehicular.taller=taller
+             vehiculo.estado_taller=True
+             vehiculo.save() 
+
         control_vehicular.empleados.add(conductor)
-          
+
+        if supervisorSalida is not None:
+            try:
+                supervisor = Empleado.objects.get(numero_empleado=supervisorSalida)
+                print(supervisor.getNombre())
+                control_vehicular.supervisor_salida=supervisor.nombre_completo
+                control_vehicular.save()
+            except Exception as e:
+                error_message = {"error": { "message": "No se encontró ningún Supervisor con el codigo proporcionado"}}
+                print(e)
+                return Response(error_message, status=404)
+        
             
         if codigoAyudante1 is not None:
             try:
