@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-&a+b@@i)z_c3++z&2&0zqumlm&f2&6jb0_mmr22b08x_pygk4w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2','192.168.2.123']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2','192.168.0.102','10.3.0.150']
 
 # Define el formato de fecha por defecto (DD/MM/YY)
 DATE_INPUT_FORMATS = ['%d/%m/%y']
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
     "rest_framework",
     "corsheaders",
     'registrovehicular'

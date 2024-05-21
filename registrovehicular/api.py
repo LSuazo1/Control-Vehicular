@@ -1,6 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+import datetime
 from .models import Vehiculo, Empleado, ControlVehicular, FotosControlVehicular
 from .serializers import (
     VehiculoSerializer,
@@ -48,7 +49,6 @@ class ControlVehicularViewSet(viewsets.ModelViewSet):
         placa = request.data.get("placaVehiculo", None)
         print(placa,codigoConductor)
        
-        
         if codigoConductor is None:
             error_message = {"error": {"message": "Es necesario que mande un conductor."}}
             print(error_message)
@@ -128,6 +128,75 @@ class ControlVehicularViewSet(viewsets.ModelViewSet):
         serializer = ControlVehicularSerializer(control_vehicular)
 
         return Response(serializer.data, status=201)
+
+    @action(detail=False, methods=["patch"])
+    def actualizar_registro(self, request):
+        codigoAyudante1 = request.data.get("ayudante1", None)
+        codigoAyudante2 = request.data.get("ayudante2", None)
+        codigoConductor = request.data.get("codigoConductor", None)
+        placa = request.data.get("placaVehiculo", None)
+        print(placa)
+        if codigoConductor is None:
+            error_message = {"error": {"message": "Es necesario que mande un conductor."}}
+            print(error_message)
+            return Response(error_message, status=400)
+        
+        try:
+            conductor = Empleado.objects.get(numero_empleado=codigoConductor)
+        except Empleado.DoesNotExist:
+            error_message = {"error": {"message": "El conductor especificado no existe."}}
+            print(error_message)
+            return Response(error_message, status=404)
+        
+        if codigoAyudante1:
+            try:
+                ayudante1 = Empleado.objects.get(numero_empleado=codigoAyudante1)
+            except Empleado.DoesNotExist:
+                error_message = {"error": {"message": "El ayudante 1 especificado no existe."}}
+                print(error_message)
+                return Response(error_message, status=404)
+
+        # Verificar si se proporcionó el código del ayudante 2
+        if codigoAyudante2:
+            try:
+                ayudante2 = Empleado.objects.get(numero_empleado=codigoAyudante2)
+            except Empleado.DoesNotExist:
+                error_message = {"error": {"message": "El ayudante 2 especificado no existe."}}
+                print(error_message)
+                return Response(error_message, status=404)
+            
+
+        try:
+            vehiculo = Vehiculo.objects.get(placa=placa)
+            if  vehiculo.estado_taller:
+                vehiculo.estado_taller =False
+            
+            vehiculo.estado_disponibilidad = True
+            vehiculo.save() 
+
+        except Vehiculo.DoesNotExist:
+            error_message = {"error": {"message": "No se encontró ningún vehículo con la placa proporcionada"}}
+            print(error_message)
+            return Response(error_message, status=404)    
+        
+        try:
+            controlVehicular = ControlVehicular.objects.filter(vehiculo__placa=placa).latest('creado')
+            controlVehicular.hora_entrada=datetime.datetime.now().time().strftime('%I:%M %p')
+            print(datetime.datetime.now().time().strftime('%I:%M %p'))
+            controlVehicular.estatus=False
+            controlVehicular.save()
+        except Exception as e:
+                error_message = {"error": { "message": "No se encontró ningún Control vehicular con la placa proporcionada"}}
+                print(e)
+                return Response(error_message, status=404)
+        
+        serializer = ControlVehicularSerializer(controlVehicular)
+
+        return Response(serializer.data, status=200)
+
+
+
+        
 
 class VehiculoViewSet(viewsets.ModelViewSet):
     queryset = Vehiculo.objects.all()
