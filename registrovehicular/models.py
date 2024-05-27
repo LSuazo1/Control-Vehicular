@@ -87,7 +87,7 @@ class ControlVehicular(models.Model):
         verbose_name = "ControlVehicular"
 
 
-def upload_profile(instance, filename):
+def upload_image(instance, filename):
     now = timezone_now()
     filename_base, filename_ext = os.path.splitext(filename)
     time_stamp = now.strftime("%d%H%M%S")
@@ -102,25 +102,25 @@ def upload_profile(instance, filename):
 class FotosControlVehicular(models.Model):
     control_vehicular = models.ForeignKey(ControlVehicular, on_delete=models.CASCADE)
     foto_conductor_salida = models.ImageField(
-        upload_to=upload_profile, blank=False, null=False
+        upload_to=upload_image, blank=False, null=False
     )
     foto_ayudante1_salida = models.ImageField(
-        upload_to=upload_profile, blank=True, null=True
+        upload_to=upload_image, blank=True, null=True
     )
     foto_ayudante2_salida = models.ImageField(
-        upload_to=upload_profile, blank=True, null=True
+        upload_to=upload_image, blank=True, null=True
     )
     foto_conductor_entrada = models.ImageField(
-        upload_to=upload_profile,
+        upload_to=upload_image,
         blank=True,
         null=True,
     )
     foto_ayudante1_entrada = models.ImageField(
-        upload_to=upload_profile,
+        upload_to=upload_image,
         blank=True,
         null=True,
     )
     foto_ayudante2_entrada = models.ImageField(
-        upload_to=upload_profile, blank=True, null=True
+        upload_to=upload_image, blank=True, null=True
     )
     descripcion = models.TextField(blank=True, null=True)

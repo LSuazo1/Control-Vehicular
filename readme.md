@@ -1,5 +1,5 @@
 # FT_CONTROL_VEHICULAR  
-Dessarrollo de la api en django para el Control Vehicular de Grupo Farinter
+Dessarrollo de la api en django para el Control Vehicular
 
 # Primeros pasos
 
